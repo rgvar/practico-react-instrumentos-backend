@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/instrumentos")
-@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class InstrumentoController {
 
     @Autowired
@@ -37,9 +37,19 @@ public class InstrumentoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createInstrumento(@RequestBody List<Instrumento> instrumentos) {
+    public ResponseEntity<?> createInstrumento(@RequestBody Instrumento instrumento) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.saveInstrumentos(instrumentos));
+            return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.saveInstrumentos(instrumento));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateInstrumento(@PathVariable Long id, @RequestBody Instrumento instrumento) {
+        try {
+            instrumento.setId(id);
+            return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.updateInstrumento(id, instrumento));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

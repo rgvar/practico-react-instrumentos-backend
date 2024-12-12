@@ -1,6 +1,7 @@
 package com.mercado.intrumentos_item_list.services;
 
 import com.mercado.intrumentos_item_list.entities.Instrumento;
+import com.mercado.intrumentos_item_list.repositories.CategoriaRepository;
 import com.mercado.intrumentos_item_list.repositories.InstrumentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ public class InstrumentoService {
     @Autowired
     private InstrumentoRepository instrumentoRepository;
 
+    private CategoriaRepository categoriaRepository;
+
     public List<Instrumento> getAllInstrumentos() {
         return instrumentoRepository.findAll();
     }
@@ -23,15 +26,19 @@ public class InstrumentoService {
         return instrumentoRepository.findById(id).orElse(null);
     }
 
-    public List<Long> saveInstrumentos(List<Instrumento> instrumentos) {
+    public Instrumento saveInstrumentos(Instrumento instrumento) {
+        return instrumentoRepository.save(instrumento);
+    }
 
-        List<Long> idList = new java.util.ArrayList<>(List.of());
-        for (Instrumento i : instrumentos) {
-
-            idList.add(instrumentoRepository.save(i).getId());
+    public Instrumento updateInstrumento(Long id, Instrumento instrumento) {
+        Optional<Instrumento> existingInstrumento = instrumentoRepository.findById(id);
+        if (existingInstrumento.isPresent()) {
+            Instrumento newCategoria = existingInstrumento.get();
+            newCategoria = instrumento;
+            return instrumentoRepository.save(newCategoria);
+        } else {
+            throw new RuntimeException("Instrumento no encontrado con el ID: " + instrumento.getId());
         }
-
-        return idList;
     }
 
     public Boolean deleteInstrumento(Long id) throws Exception{

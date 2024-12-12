@@ -1,8 +1,6 @@
 package com.mercado.intrumentos_item_list.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +13,7 @@ import lombok.Setter;
 public class Instrumento {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String instrumento;
@@ -25,8 +24,12 @@ public class Instrumento {
     private String costoEnvio;
     private Integer cantidadVendida;
 
-    @Column(length = 500)
+    @Column(length = 800)
     private String descripcion;
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
 
 
 }
