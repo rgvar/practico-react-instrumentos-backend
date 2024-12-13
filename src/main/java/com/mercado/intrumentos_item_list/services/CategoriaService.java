@@ -23,15 +23,8 @@ public class CategoriaService {
         return categoriaRepository.findById(id).orElse(null);
     }
 
-    public List<Long> saveCategorias(List<Categoria> categorias) {
-
-        List<Long> idList = new java.util.ArrayList<>(List.of());
-        for (Categoria i : categorias) {
-
-            idList.add(categoriaRepository.save(i).getId());
-        }
-
-        return idList;
+    public Categoria saveCategorias(Categoria categoria) {
+        return categoriaRepository.save(categoria);
     }
 
     public Categoria updateCategoria(Long id, Categoria categoria) {

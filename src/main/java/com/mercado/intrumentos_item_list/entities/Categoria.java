@@ -14,7 +14,6 @@ import lombok.Setter;
 public class Categoria {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String denominacion; // Cuerda | Viento |Percusión | Teclado | Electrónico

@@ -19,40 +19,37 @@ public class InstrumentoController {
 
 
     @GetMapping
-    public ResponseEntity<?> getAllInstrumentos() {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.getAllInstrumentos());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<List<Instrumento>> getAllInstrumentos() {
+        return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.getAllInstrumentos());
+
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getInstrumentoById(@PathVariable Long id) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.getInstrumentoById(id));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<Instrumento> getInstrumentoById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.getInstrumentoById(id));
+
+    }
+
+    @GetMapping("/categoria/{idCategoria}")
+    public ResponseEntity<List<Instrumento>> getInstrumentoByCategoria(@PathVariable Long idCategoria) {
+        return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.getInstrumentoByCategoriaId(idCategoria));
+
+    }
+
+    @GetMapping("/search/{search}")
+    public ResponseEntity<List<Instrumento>> searchInstrumento(@PathVariable String search) {
+        return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.searchInstrumento(search));
     }
 
     @PostMapping
     public ResponseEntity<?> createInstrumento(@RequestBody Instrumento instrumento) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.saveInstrumentos(instrumento));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.saveInstrumentos(instrumento));
+
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateInstrumento(@PathVariable Long id, @RequestBody Instrumento instrumento) {
-        try {
-            instrumento.setId(id);
-            return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.updateInstrumento(id, instrumento));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.updateInstrumento(id, instrumento));
     }
 
 

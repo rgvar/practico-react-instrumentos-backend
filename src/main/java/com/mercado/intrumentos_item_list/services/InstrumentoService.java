@@ -26,6 +26,15 @@ public class InstrumentoService {
         return instrumentoRepository.findById(id).orElse(null);
     }
 
+    public List<Instrumento> getInstrumentoByCategoriaId(Long idCategoria) {
+        return instrumentoRepository.findByCategoriaId(idCategoria);
+
+    }
+
+    public List<Instrumento> searchInstrumento(String search) {
+        return instrumentoRepository.findByAnything(search);
+    }
+
     public Instrumento saveInstrumentos(Instrumento instrumento) {
         return instrumentoRepository.save(instrumento);
     }
@@ -33,9 +42,9 @@ public class InstrumentoService {
     public Instrumento updateInstrumento(Long id, Instrumento instrumento) {
         Optional<Instrumento> existingInstrumento = instrumentoRepository.findById(id);
         if (existingInstrumento.isPresent()) {
-            Instrumento newCategoria = existingInstrumento.get();
-            newCategoria = instrumento;
-            return instrumentoRepository.save(newCategoria);
+            Instrumento newInstrumento = existingInstrumento.get();
+            newInstrumento = instrumento;
+            return instrumentoRepository.save(newInstrumento);
         } else {
             throw new RuntimeException("Instrumento no encontrado con el ID: " + instrumento.getId());
         }
