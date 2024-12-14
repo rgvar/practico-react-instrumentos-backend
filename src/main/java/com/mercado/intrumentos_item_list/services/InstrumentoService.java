@@ -40,11 +40,31 @@ public class InstrumentoService {
     }
 
     public Instrumento updateInstrumento(Long id, Instrumento instrumento) {
+
+        System.out.println("Instrumento recibido: " + instrumento.toString());
+        System.out.println("HOLA SOY LA CATEGORIA " + instrumento.getCategoria() +
+                " ID: " + instrumento.getCategoria().getId() +
+                " DENOM.: " + instrumento.getCategoria().getDenominacion() +
+                " Y ME GUSTA NO FUNCIONAR ");
+
         Optional<Instrumento> existingInstrumento = instrumentoRepository.findById(id);
         if (existingInstrumento.isPresent()) {
             Instrumento newInstrumento = existingInstrumento.get();
-            newInstrumento = instrumento;
-            return instrumentoRepository.save(newInstrumento);
+
+            newInstrumento.setInstrumento(instrumento.getInstrumento());
+            newInstrumento.setMarca(instrumento.getMarca());
+            newInstrumento.setModelo(instrumento.getModelo());
+            newInstrumento.setImagen(instrumento.getImagen());
+            newInstrumento.setPrecio(instrumento.getPrecio());
+            newInstrumento.setCostoEnvio(instrumento.getCostoEnvio());
+            newInstrumento.setCantidadVendida(instrumento.getCantidadVendida());
+            newInstrumento.setDescripcion(instrumento.getDescripcion());
+
+            newInstrumento.setCategoria(instrumento.getCategoria());
+
+            instrumentoRepository.save(newInstrumento);
+            return newInstrumento;
+
         } else {
             throw new RuntimeException("Instrumento no encontrado con el ID: " + instrumento.getId());
         }
