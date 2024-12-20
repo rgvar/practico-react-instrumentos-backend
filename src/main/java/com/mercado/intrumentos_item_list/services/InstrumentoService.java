@@ -1,9 +1,13 @@
 package com.mercado.intrumentos_item_list.services;
 
+import com.mercado.intrumentos_item_list.dto.InstrumentoDto;
+import com.mercado.intrumentos_item_list.dto.InstrumentoSimpleDto;
 import com.mercado.intrumentos_item_list.entities.Instrumento;
+import com.mercado.intrumentos_item_list.mapper.InstrumentoMapper;
 import com.mercado.intrumentos_item_list.repositories.CategoriaRepository;
 import com.mercado.intrumentos_item_list.repositories.InstrumentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,15 +19,18 @@ public class InstrumentoService {
 
     @Autowired
     private InstrumentoRepository instrumentoRepository;
-
+    @Autowired
     private CategoriaRepository categoriaRepository;
+    @Autowired
+    private InstrumentoMapper instrumentoMapper;
 
     public List<Instrumento> getAllInstrumentos() {
-        return instrumentoRepository.findAll();
+        return instrumentoRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
-    public Instrumento getInstrumentoById(Long id) {
-        return instrumentoRepository.findById(id).orElse(null);
+    public InstrumentoDto getInstrumentoById(Long id) {
+
+        return instrumentoMapper.toInstrumentoDto(instrumentoRepository.findById(id).orElse(null));
     }
 
     public List<Instrumento> getInstrumentoByCategoriaId(Long idCategoria) {
@@ -35,22 +42,21 @@ public class InstrumentoService {
         return instrumentoRepository.findByAnything(search);
     }
 
-    public Instrumento saveInstrumentos(Instrumento instrumento) {
-        return instrumentoRepository.save(instrumento);
+    public InstrumentoDto saveInstrumentos(InstrumentoSimpleDto instrumentoSimpleDto) {
+
+        Instrumento instrumento = instrumentoMapper.simpleDtoToInstrumento(instrumentoSimpleDto);
+
+        return instrumentoMapper.toInstrumentoDto(instrumentoRepository.save(instrumento));
     }
 
-    public Instrumento updateInstrumento(Long id, Instrumento instrumento) {
+    public InstrumentoDto updateInstrumento(Long id, InstrumentoDto instrumentoDto) {
 
-        System.out.println("Instrumento recibido: " + instrumento.toString());
-        System.out.println("HOLA SOY LA CATEGORIA " + instrumento.getCategoria() +
-                " ID: " + instrumento.getCategoria().getId() +
-                " DENOM.: " + instrumento.getCategoria().getDenominacion() +
-                " Y ME GUSTA NO FUNCIONAR ");
+        Instrumento instrumento = instrumentoMapper.dtoToInstrumento(instrumentoDto);
 
         Optional<Instrumento> existingInstrumento = instrumentoRepository.findById(id);
         if (existingInstrumento.isPresent()) {
-            Instrumento newInstrumento = existingInstrumento.get();
 
+            Instrumento newInstrumento = existingInstrumento.get();
             newInstrumento.setInstrumento(instrumento.getInstrumento());
             newInstrumento.setMarca(instrumento.getMarca());
             newInstrumento.setModelo(instrumento.getModelo());
@@ -62,11 +68,22 @@ public class InstrumentoService {
 
             newInstrumento.setCategoria(instrumento.getCategoria());
 
-            instrumentoRepository.save(newInstrumento);
-            return newInstrumento;
+            return instrumentoMapper.toInstrumentoDto(instrumentoRepository.save(newInstrumento));
 
         } else {
             throw new RuntimeException("Instrumento no encontrado con el ID: " + instrumento.getId());
+        }
+    }
+
+    public Boolean sellInstrumento(Long id, Integer cantidad) {
+        Optional<Instrumento> instrumentoOptional = instrumentoRepository.findById(id);
+        if (instrumentoOptional.isPresent()) {
+            Instrumento instrumento = instrumentoOptional.get();
+            instrumento.setCantidadVendida(instrumento.getCantidadVendida() + cantidad);
+            instrumentoRepository.save(instrumento);
+            return true;
+        } else {
+            throw new RuntimeException("Instrumento no encontrado con el ID: " + id);
         }
     }
 

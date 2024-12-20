@@ -2,15 +2,18 @@ package com.mercado.intrumentos_item_list.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import java.io.Serializable;
 
 @Entity
-@Getter @Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Instrumento {
+@Builder
+public class Instrumento implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

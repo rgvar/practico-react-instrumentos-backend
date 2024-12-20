@@ -4,6 +4,7 @@ import com.mercado.intrumentos_item_list.entities.Categoria;
 import com.mercado.intrumentos_item_list.entities.Instrumento;
 import com.mercado.intrumentos_item_list.repositories.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class CategoriaService {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
+    @Cacheable("getAllCategorias")
     public List<Categoria> getAllCategorias() {
         return categoriaRepository.findAll();
     }

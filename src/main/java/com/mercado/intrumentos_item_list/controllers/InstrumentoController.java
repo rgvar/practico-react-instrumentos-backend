@@ -1,5 +1,7 @@
 package com.mercado.intrumentos_item_list.controllers;
 
+import com.mercado.intrumentos_item_list.dto.InstrumentoDto;
+import com.mercado.intrumentos_item_list.dto.InstrumentoSimpleDto;
 import com.mercado.intrumentos_item_list.entities.Instrumento;
 import com.mercado.intrumentos_item_list.services.InstrumentoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ public class InstrumentoController {
     private InstrumentoService instrumentoService;
 
 
+
+
     @GetMapping
     public ResponseEntity<List<Instrumento>> getAllInstrumentos() {
         return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.getAllInstrumentos());
@@ -25,7 +29,8 @@ public class InstrumentoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Instrumento> getInstrumentoById(@PathVariable Long id) {
+    public ResponseEntity<InstrumentoDto> getInstrumentoById(@PathVariable Long id) {
+
         return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.getInstrumentoById(id));
 
     }
@@ -42,24 +47,26 @@ public class InstrumentoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createInstrumento(@RequestBody Instrumento instrumento) {
+    public ResponseEntity<InstrumentoDto> createInstrumento(@RequestBody InstrumentoSimpleDto instrumento) {
         return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.saveInstrumentos(instrumento));
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateInstrumento(@PathVariable Long id, @RequestBody Instrumento instrumento) {
+    public ResponseEntity<InstrumentoDto> updateInstrumento(@PathVariable Long id, @RequestBody InstrumentoDto instrumento) {
         return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.updateInstrumento(id, instrumento));
     }
 
+    @PutMapping("/venta/{id}")
+    public ResponseEntity<Boolean> sellInstrumento(@PathVariable Long id, @RequestBody Integer cantidad) {
+        return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.sellInstrumento(id, cantidad));
+    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteInstrumento(@PathVariable Long id) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.deleteInstrumento(id));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<Boolean> deleteInstrumento(@PathVariable Long id) throws Exception {
+
+        return ResponseEntity.status(HttpStatus.OK).body(instrumentoService.deleteInstrumento(id));
+
     }
 
 
